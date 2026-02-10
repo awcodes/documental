@@ -1,0 +1,11 @@
+<?php
+
+namespace Awcodes\Documental\Filament\Resources\PackageResource\Pages;
+
+use Awcodes\Documental\Filament\Resources\PackageResource;
+use Filament\Resources\Pages\CreateRecord;
+
+class CreatePackage extends CreateRecord
+{
+    protected static string $resource = PackageResource::class;
+}
