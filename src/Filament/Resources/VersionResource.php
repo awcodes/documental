@@ -2,15 +2,27 @@
 
 namespace Awcodes\Documental\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\DatePicker;
+use Filament\Actions\Action;
+use Filament\Support\Enums\Width;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Awcodes\Documental\Filament\Resources\VersionResource\Pages\ListVersions;
+use Awcodes\Documental\Filament\Resources\VersionResource\Pages\CreateVersion;
+use Awcodes\Documental\Filament\Resources\VersionResource\Pages\EditVersion;
 use Awcodes\Documental\Enums\VersionStatus;
 use Awcodes\Documental\Filament\Resources\VersionResource\Pages;
 use Awcodes\Documental\Models\Page;
 use Awcodes\Documental\Models\Version;
 use Filament\Forms;
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Support\Enums\MaxWidth;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -20,45 +32,45 @@ class VersionResource extends Resource
 {
     protected static ?string $model = Version::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-variable';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-variable';
 
     protected static ?int $navigationSort = 2;
 
-    protected static ?string $navigationGroup = 'Documental';
+    protected static string | \UnitEnum | null $navigationGroup = 'Documental';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
+        return $schema
+            ->components([
+                TextInput::make('name')
                     ->label('Name')
                     ->required(),
-                Forms\Components\Select::make('package_id')
+                Select::make('package_id')
                     ->label('Package')
                     ->relationship('package', 'name')
                     ->required(),
-                Forms\Components\Select::make('status')
+                Select::make('status')
                     ->label('Status')
                     ->options(VersionStatus::class)
                     ->required(),
-                Forms\Components\DatePicker::make('released_at')
+                DatePicker::make('released_at')
                     ->label('Released At')
                     ->required(),
                 AdjacencyList::make('navigation')
                     ->label('Navigation')
                     ->columnSpanFull()
-                    ->addAction(fn (Action $action): Action => $action->modalWidth(MaxWidth::Small))
-                    ->addChildAction(fn (Action $action): Action => $action->modalWidth(MaxWidth::Small))
-                    ->editAction(fn (Action $action): Action => $action->modalWidth(MaxWidth::Small))
-                    ->deleteAction(fn (Action $action): Action => $action->modalWidth(MaxWidth::Small))
+                    ->addAction(fn (Action $action): Action => $action->modalWidth(Width::Small))
+                    ->addChildAction(fn (Action $action): Action => $action->modalWidth(Width::Small))
+                    ->editAction(fn (Action $action): Action => $action->modalWidth(Width::Small))
+                    ->deleteAction(fn (Action $action): Action => $action->modalWidth(Width::Small))
                     ->form([
-                        Forms\Components\TextInput::make('label')
+                        TextInput::make('label')
                             ->required(),
-                        Forms\Components\Select::make('url')
+                        Select::make('url')
                             ->searchable()
                             ->preload()
                             ->live(onBlur: true)
-                            ->afterStateUpdated(function (Forms\Get $get, Forms\Set $set, $state, $record) {
+                            ->afterStateUpdated(function (Get $get, Set $set, $state, $record) {
                                 if (! $get('label')) {
                                     $page = Page::query()
                                         ->where('slug', $state)
@@ -96,16 +108,16 @@ class VersionResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                     ->badge()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('released_at')
+                TextColumn::make('released_at')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('package.name')
+                TextColumn::make('package.name')
                     ->label('Package')
                     ->searchable()
                     ->sortable(),
@@ -113,12 +125,12 @@ class VersionResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ])
             ->modifyQueryUsing(function (Builder $query) {
@@ -138,9 +150,9 @@ class VersionResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListVersions::route('/'),
-            'create' => Pages\CreateVersion::route('/create'),
-            'edit' => Pages\EditVersion::route('/{record}/edit'),
+            'index' => ListVersions::route('/'),
+            'create' => CreateVersion::route('/create'),
+            'edit' => EditVersion::route('/{record}/edit'),
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Awcodes\Documental\Filament\Resources\PageResource\Pages;
 
+use Filament\Actions\DeleteAction;
 use Awcodes\Documental\Filament\Resources\PageResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
@@ -13,7 +14,7 @@ class EditPage extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

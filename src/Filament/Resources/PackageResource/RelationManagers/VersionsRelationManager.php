@@ -2,10 +2,19 @@
 
 namespace Awcodes\Documental\Filament\Resources\PackageResource\RelationManagers;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\DatePicker;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\CreateAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
 use Awcodes\Documental\Enums\VersionStatus;
 use Awcodes\Documental\Filament\Resources\VersionResource;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -14,22 +23,22 @@ class VersionsRelationManager extends RelationManager
 {
     protected static string $relationship = 'versions';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
+        return $schema
+            ->components([
+                TextInput::make('name')
                     ->label('Name')
                     ->required(),
-                Forms\Components\Select::make('package_id')
+                Select::make('package_id')
                     ->label('Package')
                     ->relationship('package', 'name')
                     ->required(),
-                Forms\Components\Select::make('status')
+                Select::make('status')
                     ->label('Status')
                     ->options(VersionStatus::class)
                     ->required(),
-                Forms\Components\DatePicker::make('released_at')
+                DatePicker::make('released_at')
                     ->label('Released At')
                     ->required(),
             ]);
@@ -40,13 +49,13 @@ class VersionsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                     ->badge()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('released_at')
+                TextColumn::make('released_at')
                     ->date()
                     ->sortable(),
             ])
@@ -54,16 +63,16 @@ class VersionsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                CreateAction::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make()
+            ->recordActions([
+                EditAction::make()
                     ->url(fn ($record) => VersionResource::getUrl('edit', ['record' => $record])),
-                Tables\Actions\DeleteAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

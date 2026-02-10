@@ -4,7 +4,7 @@
              <div class="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow flex flex-col dark:bg-gray-800 dark:divide-gray-900">
                  <div class="px-4 py-5 sm:p-6 flex-1">
                      <div class="group relative">
-                         <h3 class="mt-0 text-lg/6 font-semibold text-gray-900 group-hover:text-gray-600">
+                         <h3 class="mt-0 text-lg/6 font-semibold text-gray-900 group-hover:text-gray-600 dark:text-gray-100">
                              <a href="{{ route('docs.version.show', ['package' => $package->slug, 'version' => $package->versions->first()]) }}" class="no-underline">
                                  <span class="absolute inset-0"></span>
                                  <span class="flex items-center gap-2">

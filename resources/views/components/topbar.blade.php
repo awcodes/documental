@@ -1,6 +1,7 @@
 @props([
     'pageHeader' => 'Page Header',
     'package' => null,
+    'navigation' => [],
 ])
 <div class="sticky top-0 z-40 h-16 shrink-0 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8 dark:bg-gray-900 dark:border-gray-800">
     <div class="grid grid-cols-2 items-center gap-x-4 lg:gap-x-6 lg:grid-cols-3">
@@ -15,12 +16,7 @@
                 </a>
             </div>
 
-            <button type="button" class="-m-2.5 p-2.5 text-gray-700 lg:hidden">
-                <span class="sr-only">Open sidebar</span>
-                <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                </svg>
-            </button>
+            <x-documental::mobile-nav :navigation="$navigation" />
 
             <div class="flex flex-1 items-center gap-x-4 lg:gap-x-6">
                 <p class="font-bold dark:text-white">{{ $pageHeader }}</p>

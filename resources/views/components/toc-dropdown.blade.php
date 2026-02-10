@@ -3,7 +3,7 @@
 }" class="relative">
     <button
         type="button"
-        class="relative flex items-center whitespace-nowrap justify-center gap-2 py-2 rounded-lg shadow-sm bg-white hover:bg-gray-50 text-gray-800 border border-gray-200 hover:border-gray-200 px-4 w-full"
+        class="relative flex items-center whitespace-nowrap justify-center gap-2 py-2 rounded-lg shadow-sm bg-white hover:bg-gray-50 text-gray-800 border border-gray-200 hover:border-gray-200 px-4 w-full dark:bg-gray-800 dark:border-gray-900 dark:text-gray-100 dark:hover:bg-gray-700/50 dark:hover:border-gray-900"
         x-on:click="open = !open"
         x-on:click.outside="open = false"
         x-on:keydown.escape.window="open = false"
@@ -19,11 +19,11 @@
     <!-- Menu Items -->
     <div
         x-transition.origin.top
-        class="absolute inset-x-0 min-w-48 rounded-lg shadow-sm mt-2 z-10 origin-top bg-white divide-y divide-gray-200 outline-none border border-gray-200"
+        class="absolute inset-x-0 min-w-48 rounded-lg shadow-sm mt-2 z-10 origin-top bg-white divide-y divide-gray-200 outline-none border border-gray-200 dark:bg-gray-800 dark:divide-gray-900 dark:border-gray-900"
         x-cloak
         x-show="open"
     >
-        <div class="p-1.5 [&_a]:text-gray-500 [&_a]:block [&_a]:py-1 [&_a]:px-2 [&_a:hover]:text-gray-700 dark:[&_a]:text-gray-400 dark:[&_a:hover]:text-gray-300" role="group">
+        <div class="p-1.5 [&_a]:text-gray-500 [&_a]:block [&_a]:py-2 [&_a]:px-2 [&_a:hover]:text-gray-700 dark:[&_a]:text-gray-400 dark:[&_a:hover]:text-gray-300" role="group">
             {{ $slot }}
         </div>
     </div>

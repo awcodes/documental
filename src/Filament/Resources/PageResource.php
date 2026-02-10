@@ -2,13 +2,27 @@
 
 namespace Awcodes\Documental\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Forms\Components\Select;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Forms\Components\MarkdownEditor;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Awcodes\Documental\Filament\Resources\PageResource\Pages\ListPages;
+use Awcodes\Documental\Filament\Resources\PageResource\Pages\CreatePage;
+use Awcodes\Documental\Filament\Resources\PageResource\Pages\EditPage;
 use Awcodes\Documental\Enums\PublishStatus;
 use Awcodes\Documental\Filament\Resources\PageResource\Pages;
 use Awcodes\Documental\Models\Package;
 use Awcodes\Documental\Models\Page;
 use Awcodes\Documental\Models\Version;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Filters\Indicator;
@@ -20,48 +34,48 @@ class PageResource extends Resource
 {
     protected static ?string $model = Page::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?int $navigationSort = 3;
 
-    protected static ?string $navigationGroup = 'Documental';
+    protected static string | \UnitEnum | null $navigationGroup = 'Documental';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->columns(3)
             ->schema([
-                Forms\Components\TextInput::make('title')
+                TextInput::make('title')
                     ->label('Title')
                     ->required()
                     ->live(debounce: 500)
-                    ->afterStateUpdated(function (Forms\Set $set, string $operation, $state) {
+                    ->afterStateUpdated(function (Set $set, string $operation, $state) {
                         if ($operation === 'create') {
                             $set('slug', Str::slug($state));
                         }
                     }),
-                Forms\Components\TextInput::make('slug')
+                TextInput::make('slug')
                     ->label('Slug')
                     ->required(),
-                Forms\Components\Select::make('status')
+                Select::make('status')
                     ->label('Status')
                     ->options(PublishStatus::class)
                     ->required(),
-                Forms\Components\Select::make('package_id')
+                Select::make('package_id')
                     ->label('Package')
                     ->relationship('package', 'name')
                     ->preload()
                     ->searchable()
                     ->required(),
-                Forms\Components\Select::make('version_id')
+                Select::make('version_id')
                     ->label('Version')
-                    ->relationship('version', 'name', function (Builder $query, Forms\Get $get) {
+                    ->relationship('version', 'name', function (Builder $query, Get $get) {
                         $query->where('package_id', $get('package_id'))->orderBy('name', 'desc');
                     })
                     ->preload()
                     ->searchable()
                     ->required(),
-                Forms\Components\MarkdownEditor::make('content')
+                MarkdownEditor::make('content')
                     ->label('Content')
                     ->required()
                     ->columnSpanFull(),
@@ -72,28 +86,28 @@ class PageResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('title')
+                TextColumn::make('title')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                     ->badge()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('version.name')
+                TextColumn::make('version.name')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('package.name')
+                TextColumn::make('package.name')
                     ->searchable()
                     ->sortable(),
             ])
             ->filters([
-                Tables\Filters\Filter::make('package_version')
-                    ->form([
-                        Forms\Components\Select::make('package')
+                Filter::make('package_version')
+                    ->schema([
+                        Select::make('package')
                             ->relationship('package', 'name')
                             ->preload()
                             ->label('Package'),
-                        Forms\Components\Select::make('version')
-                            ->relationship('version', 'name', function (Builder $query, Forms\Get $get) {
+                        Select::make('version')
+                            ->relationship('version', 'name', function (Builder $query, Get $get) {
                                 $query->where('package_id', $get('package'));
                             })
                             ->preload()
@@ -127,15 +141,15 @@ class PageResource extends Resource
 
                         return $indicators;
                     }),
-                Tables\Filters\SelectFilter::make('status')
+                SelectFilter::make('status')
                     ->options(PublishStatus::class),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ])
             ->reorderable('order_column')
@@ -158,9 +172,9 @@ class PageResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPages::route('/'),
-            'create' => Pages\CreatePage::route('/create'),
-            'edit' => Pages\EditPage::route('/{record}/edit'),
+            'index' => ListPages::route('/'),
+            'create' => CreatePage::route('/create'),
+            'edit' => EditPage::route('/{record}/edit'),
         ];
     }
 

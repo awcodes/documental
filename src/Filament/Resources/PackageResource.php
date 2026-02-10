@@ -3,13 +3,23 @@
 namespace Awcodes\Documental\Filament\Resources;
 
 use Awcodes\Documental\Enums\PublishStatus;
-use Awcodes\Documental\Filament\Resources\PackageResource\Pages;
-use Awcodes\Documental\Filament\Resources\PackageResource\RelationManagers;
+use Awcodes\Documental\Filament\Resources\PackageResource\Pages\CreatePackage;
+use Awcodes\Documental\Filament\Resources\PackageResource\Pages\EditPackage;
+use Awcodes\Documental\Filament\Resources\PackageResource\Pages\ListPackages;
+use Awcodes\Documental\Filament\Resources\PackageResource\RelationManagers\VersionsRelationManager;
 use Awcodes\Documental\Models\Package;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Number;
@@ -19,55 +29,55 @@ class PackageResource extends Resource
 {
     protected static ?string $model = Package::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-archive-box';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-archive-box';
 
     protected static ?int $navigationSort = 1;
 
-    protected static ?string $navigationGroup = 'Documental';
+    protected static string | \UnitEnum | null $navigationGroup = 'Documental';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
+        return $schema
+            ->components([
+                TextInput::make('name')
                     ->label('Name')
                     ->required()
                     ->live(debounce: 500)
-                    ->afterStateUpdated(function (Forms\Set $set, string $operation, $state) {
+                    ->afterStateUpdated(function (Set $set, string $operation, $state) {
                         if ($operation === 'create') {
                             $set('slug', Str::slug($state));
                         }
                     }),
-                Forms\Components\TextInput::make('slug')
+                TextInput::make('slug')
                     ->label('Slug')
                     ->required(),
-                Forms\Components\Select::make('status')
+                Select::make('status')
                     ->label('Status')
                     ->options(PublishStatus::class)
                     ->required(),
-                Forms\Components\Group::make([
-                    Forms\Components\TextInput::make('github_url')
+                Group::make([
+                    TextInput::make('github_url')
                         ->label('GitHub')
                         ->prefix('github.com/')
                         ->live(onBlur: true)
-                        ->afterStateUpdated(function (Forms\Components\Component $component, $state) {
+                        ->afterStateUpdated(function (Component $component, $state) {
                             $component->state(Str::ltrim($state, '/'));
                         })
                         ->columnSpan(2),
-                    Forms\Components\TextInput::make('stars')
+                    TextInput::make('stars')
                         ->label('Stars')
                         ->disabled()
                         ->formatStateUsing(fn ($state) => Number::format($state)),
-                    Forms\Components\TextInput::make('downloads')
+                    TextInput::make('downloads')
                         ->label('Downloads')
                         ->disabled()
                         ->formatStateUsing(fn ($state) => Number::format($state)),
-                    Forms\Components\TextInput::make('latest_release')
+                    TextInput::make('latest_release')
                         ->label('Latest Release')
                         ->disabled(),
                 ])->columnSpanFull()->columns(5),
-                Forms\Components\Group::make([
-                    Forms\Components\Textarea::make('description')
+                Group::make([
+                    Textarea::make('description')
                         ->label('Description')
                         ->columnSpanFull(),
                 ])->columns(3)->columnSpanFull(),
@@ -78,29 +88,29 @@ class PackageResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('latest_release'),
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('latest_release'),
+                TextColumn::make('status')
                     ->badge()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('stars')
+                TextColumn::make('stars')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('downloads')
+                TextColumn::make('downloads')
                     ->numeric()
                     ->sortable(),
             ])
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -108,16 +118,16 @@ class PackageResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\VersionsRelationManager::class,
+            VersionsRelationManager::class,
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPackages::route('/'),
-            'create' => Pages\CreatePackage::route('/create'),
-            'edit' => Pages\EditPackage::route('/{record}/edit'),
+            'index' => ListPackages::route('/'),
+            'create' => CreatePackage::route('/create'),
+            'edit' => EditPackage::route('/{record}/edit'),
         ];
     }
 

@@ -9,7 +9,8 @@ use League\CommonMark\Extension\TableOfContents\TableOfContentsExtension;
 use League\CommonMark\GithubFlavoredMarkdownConverter;
 use League\CommonMark\Node\Query;
 use League\CommonMark\Renderer\HtmlRenderer;
-use Phiki\CommonMark\PhikiExtension;
+use Phiki\Adapters\CommonMark\PhikiExtension;
+use PomoDocs\CommonMark\Alert\AlertExtension;
 use RyanChandler\CommonmarkBladeBlock\BladeExtension;
 
 class Documental
@@ -40,6 +41,20 @@ class Documental
                 'normalize' => 'relative',
                 'placeholder' => null,
             ],
+            'alert' => [
+                'class_name' => 'alert',
+                'colors' => [
+                    'note' => 'note',
+                    'tip' => 'tip',
+                    'important' => 'important',
+                    'warning' => 'warning',
+                    'caution' => 'caution',
+                ],
+                'icons' => [
+                    'active' => true,
+                    'use_svg' => true,
+                ],
+            ],
         ];
 
         $extensions = [
@@ -50,6 +65,7 @@ class Documental
                 'dark' => config('documental.phiki.themes.dark'),
             ]),
             new BladeExtension,
+            new AlertExtension,
         ];
 
         $converter = new GithubFlavoredMarkdownConverter($options);

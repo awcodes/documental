@@ -1,3 +1,6 @@
+> [!CAUTION]
+> This package is in early development and is not yet ready for production use. Use at your own risk. If you would like to contribute or provide feedback, please open an issue or submit a pull request.
+
 # Documental
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/awcodes/documental.svg?style=flat-square)](https://packagist.org/packages/awcodes/documental)

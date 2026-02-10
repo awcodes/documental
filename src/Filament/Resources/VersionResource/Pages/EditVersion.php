@@ -2,6 +2,8 @@
 
 namespace Awcodes\Documental\Filament\Resources\VersionResource\Pages;
 
+use Filament\Actions\Action;
+use Filament\Actions\DeleteAction;
 use Awcodes\Documental\Filament\Resources\PageResource;
 use Awcodes\Documental\Filament\Resources\VersionResource;
 use Filament\Actions;
@@ -14,12 +16,12 @@ class EditVersion extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\Action::make('pages')
+            Action::make('pages')
                 ->url(fn ($record) => PageResource::getUrl('index', [
                     'tableFilters[package_version][package]' => $record->package_id,
                     'tableFilters[package_version][version]' => $record->id,
                 ])),
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

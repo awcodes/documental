@@ -38,7 +38,7 @@
 </head>
 <body class="min-h-full flex flex-col">
     <div class="flex w-full flex-col">
-        <x-documental::topbar :pageHeader="$pageHeader" :package="$package" />
+        <x-documental::topbar :pageHeader="$pageHeader" :package="$package" :navigation="$navigation" />
 
         <div class="relative mx-auto flex w-full max-w-8xl flex-auto justify-center sm:px-2 lg:px-8 xl:px-12">
             @if (filled($navigation))
