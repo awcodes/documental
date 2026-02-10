@@ -2,9 +2,8 @@
 
 namespace Awcodes\Documental\Filament\Resources\PageResource\Pages;
 
-use Filament\Actions\CreateAction;
 use Awcodes\Documental\Filament\Resources\PageResource;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListPages extends ListRecords

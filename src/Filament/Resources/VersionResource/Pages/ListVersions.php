@@ -2,9 +2,8 @@
 
 namespace Awcodes\Documental\Filament\Resources\VersionResource\Pages;
 
-use Filament\Actions\CreateAction;
 use Awcodes\Documental\Filament\Resources\VersionResource;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListVersions extends ListRecords

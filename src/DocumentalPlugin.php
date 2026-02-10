@@ -7,8 +7,6 @@ use Awcodes\Documental\Filament\Resources\PageResource;
 use Awcodes\Documental\Filament\Resources\VersionResource;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
-use Phiki\Theme\DefaultThemes;
-use Phiki\Theme\Theme;
 
 class DocumentalPlugin implements Plugin
 {

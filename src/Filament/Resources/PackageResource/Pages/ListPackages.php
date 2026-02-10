@@ -2,9 +2,8 @@
 
 namespace Awcodes\Documental\Filament\Resources\PackageResource\Pages;
 
-use Filament\Actions\CreateAction;
 use Awcodes\Documental\Filament\Resources\PackageResource;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListPackages extends ListRecords

@@ -2,9 +2,8 @@
 
 namespace Awcodes\Documental\Filament\Resources\PackageResource\Pages;
 
-use Filament\Actions\DeleteAction;
 use Awcodes\Documental\Filament\Resources\PackageResource;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditPackage extends EditRecord

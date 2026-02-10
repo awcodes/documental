@@ -2,11 +2,10 @@
 
 namespace Awcodes\Documental\Filament\Resources\VersionResource\Pages;
 
-use Filament\Actions\Action;
-use Filament\Actions\DeleteAction;
 use Awcodes\Documental\Filament\Resources\PageResource;
 use Awcodes\Documental\Filament\Resources\VersionResource;
-use Filament\Actions;
+use Filament\Actions\Action;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditVersion extends EditRecord

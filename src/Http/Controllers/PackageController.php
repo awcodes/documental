@@ -3,8 +3,6 @@
 namespace Awcodes\Documental\Http\Controllers;
 
 use Awcodes\Documental\Models\Package;
-use Awcodes\Documental\Models\Version;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class PackageController
